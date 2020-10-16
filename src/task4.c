@@ -21,7 +21,7 @@ int main() {
 		printf("You are too slim\n");
 	} else {
 		float tmp = height - 105.0;
-		if (((weight - 10.0f) < tmp) && (tmp <= (weight + 20.0f))) {
+		if (((weight-10.0f)<tmp) && (tmp<=(weight+20.0f))) {
 			printf("You are fit\n");
 		} else {
 			printf("You are too fat\n");

@@ -20,7 +20,7 @@ int main() {
 	/* convert UPPER CASE to lower case
 	 * 97 is A
 	 * 102 is F */
-	if (grade >= 97 && grade <= 102) {
+	if (grade>=97 && grade<=102) {
 		grade -= 32;
 	}
 
