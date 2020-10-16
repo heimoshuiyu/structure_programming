@@ -17,11 +17,9 @@ int main() {
 	printf("Input a GAP grade: ");
 	scanf("%c", &grade);
 
-	/* convert UPPER CASE to lower case
-	 * 97 is A
-	 * 102 is F */
-	if (grade>=97 && grade<=102) {
-		grade -= 32;
+	/* convert lower case to UPPER CASE*/
+	if (grade>='a' && grade<='z') {
+		grade += 'A' - 'a';
 	}
 
 	/* output GPA point */
