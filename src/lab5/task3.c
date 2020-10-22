@@ -30,5 +30,7 @@ int main() {
 		/* print \n at the end of line */
 		printf("\n");
 	}
+
+	return 0;
 }
 
