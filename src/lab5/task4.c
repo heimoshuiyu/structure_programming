@@ -19,13 +19,13 @@ int main() {
 	/* satisfy first condition under 1000 */
 	for (int i=0; i<1000; i++) {
 
-		/* satisfy second condition multiple of 5 */
-		if (i % 5) {
+		/* pass if not satisfy second condition multiple of 5 */
+		if (!(i % 5)) {
 			continue;
 		}
 
-		/* satisfy third condition not multiple of 7 */
-		if (!(i % 7)) {
+		/* pass if not satisfy third condition not multiple of 7 */
+		if (i % 7) {
 			continue;
 		}
 
@@ -34,5 +34,7 @@ int main() {
 	}
 
 	printf("%d\n", result);
+
+	return 0;
 }
 
