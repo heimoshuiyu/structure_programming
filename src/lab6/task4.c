@@ -4,7 +4,7 @@
  * Task: Week_5_Lab_6_Task_3
  * Requirement: 
  * Write a program  to read a sequence of positive integers
- * and sort them in ascending order. You can use -1 to
+ * and sort them in descending order. You can use -1 to
  * indicate the  end of input sequence.
  */
 
@@ -51,8 +51,8 @@ int main() {
 	/* bubble sort */
 	for (int n=len-1; n>0; n--) {
 		for (int i=0; i<n; i++) {
-			/* ascending order */
-			if (data[i] > data[i+1]) {
+			/* descending order */
+			if (data[i] < data[i+1]) {
 				/* swap */
 				int tmp = data[i];
 				data[i] = data[i+1];
