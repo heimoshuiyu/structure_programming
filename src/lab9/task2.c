@@ -1,3 +1,14 @@
+/*
+ * Programmer: Walter 1930006025
+ * Student ID: 1930006025
+ * Date: 2020.11.12
+ * Task no: Week_7_Task_2
+ * Requirements:
+ * Change the following program such that it will
+ * find and print out the biggest value in
+ * the array value.
+ */
+
 #include <stdio.h>
 
 float get_highest(float a[], int n);
