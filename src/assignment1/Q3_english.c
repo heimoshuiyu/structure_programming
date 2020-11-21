@@ -27,7 +27,7 @@ int main() {
 
 	/* show result */
 	printf("You input %c, ASCII code is %d\n", c, c);
-	printf("It is a %s\n", type_dict[type]);
+	printf("It is %s\n", type_dict[type]);
 
 	return 0;
 }
