@@ -4,6 +4,9 @@
  * Q1_fixErrors.cpp
  */
 
+/* ignore scanf() unsafe warrning in Visual Studio */
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 
 int main()
@@ -30,4 +33,7 @@ int main()
  * 2. unused variable 'f'
  * 3. 'i' may be used uninitialized in printf()
  * 4. main function do not have a return statement
+ * 5. (Only in Visual Studio) "scanf" function may be unsafe.
+ *    Actually, scanf("%c", &ch); only read one char, so it will NOT overflow.
+ *    This warrning can be ignore.
  */
