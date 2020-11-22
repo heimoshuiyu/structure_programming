@@ -11,7 +11,7 @@ int main() {
 	char c;
 	int type;
 	/* type description */
-	char *type_dict[] = {
+	static const char *type_dict[] = {
 		"Error",
 		"Digit",
 		"English",
