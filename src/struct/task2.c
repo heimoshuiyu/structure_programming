@@ -1,6 +1,17 @@
+/*
+ * Author: Walter
+ * Student ID: 1930006025
+ * task2.cpp
+ * Lab_11_task_2
+ * Requirment:
+ * Write a program to read students' information
+ * (name, score and major)
+ * and sort students' information by name in ascending order
+ * Assume number of student will not exceed 50.
+ */
+
 #include <stdio.h>
 #include <string.h>
-#include <stdio.h>
 
 /* MAX number of student in list */
 #define UPPER_LIMIT 50

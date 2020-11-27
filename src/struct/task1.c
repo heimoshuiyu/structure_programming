@@ -1,3 +1,14 @@
+/*
+ * Author: Walter
+ * Student ID: 1930006025
+ * task1.cpp
+ * Lab_11_task_1
+ * Requirment:
+ * Declare structures Point, Line and Triangle
+ * Calculate the length of the line and
+ * the circumeference of the triangle
+ */
+
 #include <stdio.h>
 #include <math.h>
 
