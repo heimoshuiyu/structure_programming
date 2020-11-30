@@ -26,7 +26,7 @@ typedef struct Student Student;
 
 typedef struct Student {
 	char name[NAME_LENGTH];
-	int score;
+	float score;
 	char major[MAJOR_LENGTH];
 } Student;
 
@@ -56,7 +56,7 @@ int main() {
 		scanf("%s", student_list[i].name);
 		getchar();
 		/* input score */
-		scanf("%d", &student_list[i].score);
+		scanf("%f", &student_list[i].score);
 		getchar();
 		/* input major */
 		scanf("%s", student_list[i].major);
@@ -80,7 +80,7 @@ int main() {
 	/* show result */
 	printf("The student list in ascending order by name is\n");
 	for (int i=0; i<student_list_len; i++) {
-		printf("%s %d %s\n",
+		printf("%s %f %s\n",
 				student_list[i].name,
 				student_list[i].score,
 				student_list[i].major);
