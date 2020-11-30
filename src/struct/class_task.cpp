@@ -23,12 +23,15 @@ struct Student { // each student will have three elements: name, major, score
    // sub function can use it.
 
 void sort(Student stu[], int n); // sort the student by name, no need to return,
+void sort_rev(Student stu[], int n); // sort the student by name, no need to return,
                                  // so the return type is void
 void sort_score(Student stu[], int n); // sort the student by name, no need to return,
 void printList(const Student stu[], int n);
+void printList(const Student stu[], int n, const char department[10]);
 
 static const char menu_text[] =
 "Select the way you want to output\n"
+"0. Exit\n"
 "1. Order by Name (a-Z)\n"
 "2. Order by Name (Z-a)\n"
 "3. Order by score\n"
@@ -84,12 +87,25 @@ int main() {
 	  getchar();
 
 	  if (select == 0) {
-		break;
-	  }
-
-	  if (select == 1) {
-	  }
-
+		  break;
+	  } else if (select == 1) {
+      sort(stu, num);
+      printList(stu, num);
+	  } else if (select == 2) {
+      sort_rev(stu, num);
+      printList(stu, num);
+    } else if (select == 3) {
+      sort_score(stu, num);
+      printList(stu, num);
+    } else if (select == 4) {
+      char department[10];
+      printf("Input a department: ");
+      scanf("%s", department);
+      printList(stu, num, department);
+    } else {
+      printf("Unknown command, try again\n");
+      continue;
+    }
   }
   return 0;
 }
@@ -112,8 +128,8 @@ void sort(Student stu[], int n) { // n is the number of students
 void sort_rev(Student stu[], int n) { // n is the number of students
   int i, j;
   Student temp; // declare temp, use when swap
-  for (i = 0; i <= n - 2; i++) {
-    for (j = i + 1; j <= n - 1; j++) {
+  for (i = n; i >= 0; i--) {
+    for (j = 0; j <= n - 1; j++) {
       if (strcmp(stu[i].name, stu[j].name) <
           0) { // use strcmp to compare two strings.
         temp = stu[i];
@@ -143,5 +159,15 @@ void printList(const Student stu[], int n) {
   for (int i=0; i<n; i++) {
     printf("%s %.2f %s\n",
         stu[i].name, stu[i].score, stu[i].major);
+  }
+}
+
+void printList(const Student stu[], int n, const char department[10]) {
+  printf("Department: %s\n", department);
+  for (int i=0; i<n; i++) {
+    if (strcmp(stu[i].major, department)==0) {
+      printf("%s %.2f %s\n",
+          stu[i].name, stu[i].score, stu[i].major);
+    }
   }
 }
