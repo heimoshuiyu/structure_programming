@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+/* copy string, return address of dest */
 char *stringCopy(char *dest, char *src);
 
 int main() {
@@ -19,9 +20,10 @@ int main() {
 }
 
 char *stringCopy(char *dest, char *src) {
-  for (; *src != '\0'; src++) {
-    *(dest++) = *src;
+  char *s=src, *d=dest;
+  while (*s != '\0') {
+    *(d++) = *(s++);
   }
-  *dest = '\0';
+  *d = '\0';
   return dest;
 }
