@@ -109,6 +109,7 @@ Student *newStudent(int id, const char name[]) {
 	/* set data */
 	p->id = id;
 	strcpy(p->name, name);
+	p->next = NULL;
 
 	return p;
 }
