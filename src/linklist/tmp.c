@@ -76,7 +76,7 @@ void print(struct Student *student) {
 
 void add(struct Linklist *linklist, char name[], int id) {
 	// 声明一个指针，并用它指向新分配的内存
-	struct Student *newStudent = malloc(sizeof(struct Student));
+	struct Student *newStudent = (struct Student*)malloc(sizeof(struct Student));
 	// 如果指针为空，则说明内存分配失败
 	if  (newStudent == NULL) {
 		printf("malloc error\n");
