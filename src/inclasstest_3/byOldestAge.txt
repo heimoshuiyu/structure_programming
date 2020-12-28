@@ -1,0 +1,5 @@
+Dargon	25	100
+Dog	20	50
+Walter	38	40
+Miku	39	16
+Cat	100	3
