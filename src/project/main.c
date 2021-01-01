@@ -12,12 +12,12 @@
 #define FILENAME_FEMAIELIST "femaleList.txt"
 #define FILENAME_BYAGE "byAge.txt"
 #define TITLE_HINT "Name(str) Age(int) Gender(char) Mobile(str) Room(str) Birthday(str)"
-#define TITLE_PERSON "%10s %4s %6s %15s %15s %8s\n"
-#define TITLE_PERSON_WITHOUT_AGE "%10s %6s %15s %15s %8s\n"
-#define TITLE_PERSON_NAME_GENDER_AGE "%10s %6s %4s\n"
-#define FORMAT_PERSON "%10s %4d %6c %15s %15s %8s\n"
-#define FORMAT_PERSON_WITHOUT_AGE "%10s %6c %15s %15s %8s\n"
-#define FORMAT_PERSON_NAME_GENDER_AGE "%10s %6c %4d\n"
+#define TITLE_PERSON "-%14s %4s %6s %15s %15s %8s\n"
+#define TITLE_PERSON_WITHOUT_AGE "-%14s %6s %15s %15s %8s\n"
+#define TITLE_PERSON_NAME_GENDER_AGE "-%14s %6s %4s\n"
+#define FORMAT_PERSON "%15s %4d %6c %15s %15s %8s\n"
+#define FORMAT_PERSON_WITHOUT_AGE "%15s %6c %15s %15s %8s\n"
+#define FORMAT_PERSON_NAME_GENDER_AGE "%15s %6c %4d\n"
 typedef struct Person Person;
 typedef struct Linklist linklist;
 
@@ -43,7 +43,7 @@ static size_t PersonDataSize = sizeof(Person) - sizeof(Person *) * 2;
 void function_list();
 void Quit() { exit(0); }
 
-void checkPtr(void *);
+FILE *ShortCutOpen(const char filename[], const char flags[]);
 Linklist *newLinklist();
 Person *newPerson();
 int updatePerson(FILE *fp, Person *person);
@@ -68,11 +68,13 @@ int main() {
 	return 0;
 }
 
-void checkPtr(void *ptr) {
-	if (ptr == NULL) {
-		fprintf(stderr, "NULL pointer\n");
-		exit(1);
+FILE *ShortCutOpen(const char filename[], const char flags[]) {
+	FILE *fp = fopen(filename, flags);
+	if (!fp) {
+		fprintf(stderr, "Fatal: Can not open file %s with flags %s\n", filename, flags);
+		exit(2);
 	}
+	return fp;
 }
 
 Linklist *newLinklist() {
@@ -269,11 +271,7 @@ Linklist *readLinklistFromFilename(const char filename[]) {
 	FILE *fp;
 	Linklist *linklist;
 	Person *person;
-	fp = fopen(filename, "r");
-	if (!fp) {
-		fprintf(stderr, "Fatal: Open %s error\n", filename);
-		exit(2);
-	}
+	fp = ShortCutOpen(filename, "r");
 	linklist = newLinklist();
 	while (person = fscanPerson(fp), person) {
 		addPerson(linklist, person);
@@ -310,9 +308,6 @@ void function_list() {
 		printf("\t\t|   $$ 8 -Quit -                                |\n");
 		printf("\t\t|                                               |\n");
 		printf("\t\t|###############################################|\n");
-
-		printf("\n\n\n\n");
-
 		printf("Please Input Number:");
 		scanf("%d", &i);
 		getchar();
@@ -354,19 +349,12 @@ void function_list() {
 				break;
 			case 5:
 				fprintLinklistByGender(stdout, linklist, fprintPersonWithoutAge, 'M');
-				fp = fopen(FILENAME_MAIELIST, "w");
-				if (!fp) {
-					printf("Fatal: Can not write to %s\n", FILENAME_MAIELIST);
-					exit(3);
-				}
+				fp = ShortCutOpen(FILENAME_MAIELIST, "w");
 				fprintLinklistByGender(fp, linklist, fprintPerson, 'M');
+				fclose(fp);
 
 				fprintLinklistByGender(stdout, linklist, fprintPersonWithoutAge, 'F');
-				fp = fopen(FILENAME_FEMAIELIST, "w");
-				if (!fp) {
-					printf("Fatal: Can not write to %s\n", FILENAME_FEMAIELIST);
-					exit(3);
-				}
+				fp = ShortCutOpen(FILENAME_FEMAIELIST, "w");
 				fprintLinklistByGender(fp, linklist, fprintPersonWithoutAge, 'F');
 				fclose(fp);
 				break;
@@ -377,15 +365,14 @@ void function_list() {
 			case 7:
 				fprintLinklist(stdout, linklist, fprintPersonNameGenderAge);
 
-				fp = fopen(FILENAME_BYAGE, "w");
-				if (!fp) {
-					printf("Fatal: Can not write to %s\n", FILENAME_BYAGE);
-					exit(3);
-				}
+				fp = ShortCutOpen(FILENAME_BYAGE, "w");
 				fprintLinklistByGender(fp, linklist, fprintPerson, 'F');
 				fclose(fp);
 				break;
 			case 8:
+				fp = ShortCutOpen(FILENAME_NOTEBOOK, "w");
+				fprintLinklist(fp, linklist, fprintPerson);
+				fclose(fp);
 				Quit();
 				break;
 			default:
