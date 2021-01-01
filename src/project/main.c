@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define PERSON_NAME_LENGTH 20
+#define PERSON_NAME_LENGTH 10
 #define PERSON_MOBILE_LENGTH 15
-#define PERSON_ROOM_LENGTH 20
+#define PERSON_ROOM_LENGTH 15
 #define PERSON_BIRTHDAY_LENGTH 8
 #define PERSON_DATA_NUM 6
 #define FILENAME_NOTEBOOK "notebook.txt"
@@ -12,7 +12,12 @@
 #define FILENAME_FEMAIELIST "femaleList.txt"
 #define FILENAME_BYAGE "byAge.txt"
 #define TITLE_HINT "Name(str) Age(int) Gender(char) Mobile(str) Room(str) Birthday(str)"
-
+#define TITLE_PERSON "%10s %4s %6s %15s %15s %8s\n"
+#define TITLE_PERSON_WITHOUT_AGE "%10s %6s %15s %15s %8s\n"
+#define TITLE_PERSON_NAME_GENDER_AGE "%10s %6s %4s\n"
+#define FORMAT_PERSON "%10s %4d %6c %15s %15s %8s\n"
+#define FORMAT_PERSON_WITHOUT_AGE "%10s %6c %15s %15s %8s\n"
+#define FORMAT_PERSON_NAME_GENDER_AGE "%10s %6c %4d\n"
 typedef struct Person Person;
 typedef struct Linklist linklist;
 
@@ -190,7 +195,7 @@ Person *findPersonByMobile(Linklist *linklist, const char mobile[]) {
 }
 
 void fprintPerson(FILE *fp, Person *person) {
-	fprintf(fp, "%s\t%d\t%c\t%s\t%s\t%s\n",
+	fprintf(fp, FORMAT_PERSON,
 			person->name,
 			person->age,
 			person->gender,
@@ -201,7 +206,7 @@ void fprintPerson(FILE *fp, Person *person) {
 }
 
 void fprintPersonWithoutAge(FILE *fp, Person *person) {
-	fprintf(fp, "%s\t%c\t%s\t%s\t%s\n",
+	fprintf(fp, FORMAT_PERSON_WITHOUT_AGE,
 			person->name,
 			person->gender,
 			person->mobile,
@@ -211,24 +216,32 @@ void fprintPersonWithoutAge(FILE *fp, Person *person) {
 }
 
 void fprintPersonNameGenderAge(FILE *fp, Person *person) {
-	fprintf(fp, "%s\t%d\t\%c\n",
+	fprintf(fp, FORMAT_PERSON_NAME_GENDER_AGE,
 			person->name,
-			person->age,
-			person->gender
+			person->gender,
+			person->age
 	       );
 }
 
 void fprintLinklist(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person)) {
-	Person *person;
-	for (person = linklist->phead; person; person = person->next) {
-		callbackFPrintPerson(fp, person);
-	}
+	fprintLinklistByGender(fp, linklist, callbackFPrintPerson, 0);
 }
 
 void fprintLinklistByGender(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person), char gender) {
 	Person *person;
+	if (fp == stdout) {
+		if (callbackFPrintPerson == fprintPerson) {
+			fprintf(fp, TITLE_PERSON, "Name", "Age", "Gender", "Mobile", "Room", "Birthday");
+		} else if (callbackFPrintPerson == fprintPersonWithoutAge) {
+			fprintf(fp, TITLE_PERSON_WITHOUT_AGE, "Name", "Gender", "Mobile", "Room", "Birthday");
+		} else if (callbackFPrintPerson == fprintPersonNameGenderAge) {
+			fprintf(fp, TITLE_PERSON_NAME_GENDER_AGE, "Name", "Gender", "Age");
+		} else {
+			fprintf(stderr, "Warrning: Unknown title of callback function %p\n", callbackFPrintPerson);
+		}
+	}
 	for (person = linklist->phead; person; person = person->next) {
-		if (person->gender == gender) {
+		if (person->gender == gender || !gender) {
 			callbackFPrintPerson(fp, person);
 		}
 	}
