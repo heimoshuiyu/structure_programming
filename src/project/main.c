@@ -11,6 +11,7 @@
 #define FILENAME_MAIELIST "maleList.txt"
 #define FILENAME_FEMAIELIST "femaleList.txt"
 #define FILENAME_BYAGE "byAge.txt"
+#define FILENAME_NAMELIST "nameList.txt"
 #define TITLE_HINT "Name(str) Age(int) Gender(char) Mobile(str) Room(str) Birthday(str)"
 #define TITLE_PERSON "-%14s %4s %6s %15s %15s %8s\n"
 #define TITLE_PERSON_WITHOUT_AGE "-%14s %6s %15s %15s %8s\n"
@@ -37,8 +38,6 @@ typedef struct Person {
 	Person *next;
 	Person *last;
 } Person;
-
-static size_t PersonDataSize = sizeof(Person) - sizeof(Person *) * 2;
 
 void function_list();
 void Quit() { exit(0); }
@@ -383,6 +382,9 @@ void function_list() {
 				getchar();
 				sortLinklistByName(linklist, desc);
 				fprintLinklist(stdout, linklist, fprintPersonWithoutAge);
+				fp = ShortCutOpen(FILENAME_NAMELIST, "w");
+				fprintLinklist(fp, linklist, fprintPerson);
+				fclose(fp);
 				break;
 			case 7:
 				fprintLinklist(stdout, linklist, fprintPersonNameGenderAge);
