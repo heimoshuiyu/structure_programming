@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define PERSON_NAME_LENGTH 10
+#define PERSON_NAME_LENGTH 15
 #define PERSON_MOBILE_LENGTH 15
 #define PERSON_ROOM_LENGTH 15
 #define PERSON_BIRTHDAY_LENGTH 8
@@ -250,18 +250,37 @@ void fprintLinklistByGender(FILE *fp, Linklist *linklist, void (*callbackFPrintP
 }
 
 void sortLinklistByName(Linklist *linklist, char desc) {
-	Person tmp;
+	Person *a, *c, *d;
 	Person *person;
-	for (size_t i = linklist->len; i >= 0; i--) {
+	for (size_t i = linklist->len; i > 0; i--) {
+		person = linklist->phead;
 		for (
 				size_t k = 0;
 				k < i - 1;
-				k++, person = person->next
+				k++
 		    ) {
 			if (strcmp(person->name, person->next->name) * desc > 0) {
-				memcpy(&tmp, person, PersonDataSize);
-				memcpy(person, person->name, PersonDataSize);
-				memcpy(person->next, &tmp, PersonDataSize);
+				c = person->next;
+				if (linklist->phead == person) {
+					linklist->phead = c;
+					c->last = NULL;
+				} else {
+					a = person->last;
+					a->next = c;
+					c->last = a;
+				}
+				if (linklist->ptail == c) {
+					linklist->ptail = person;
+					person->next = NULL;
+				} else {
+					d = c->next;
+					person->next = d;
+					d->last = person;
+				}
+				c->next = person;
+				person->last = c;
+			} else {
+				person = person->next;
 			}
 		}
 	}
@@ -282,7 +301,7 @@ Linklist *readLinklistFromFilename(const char filename[]) {
 
 void function_list() {
 	int i;
-	char gender;
+	int desc;
 	FILE *fp;
 
 	void (*callbackFPrintPerson)(FILE *fp, Person *person);
@@ -359,7 +378,10 @@ void function_list() {
 				fclose(fp);
 				break;
 			case 6:
-				sortLinklistByName(linklist, 1);
+				printf("Select direction:\n 1: a-Z\n-1: Z-a\nPlease select (1/-1): ");
+				scanf(" %d", &desc);
+				getchar();
+				sortLinklistByName(linklist, desc);
 				fprintLinklist(stdout, linklist, fprintPersonWithoutAge);
 				break;
 			case 7:
