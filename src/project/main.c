@@ -126,13 +126,14 @@ Person *findPersonDependOnUser(Linklist *linklist) {
 	char name[PERSON_NAME_LENGTH];
 	char mobile[PERSON_MOBILE_LENGTH];
 	Person *person;
-	printf("Select the way to find a person:\n");
-	printf("1. By name\n");
-	printf("2. By mobile\n");
-	printf("3. Go back\n");
-	printf("Please select a number: ");
-	scanf("%d", &select);
 	while (1) {
+		printf("Select the way to find a person:\n");
+		printf("1. By name\n");
+		printf("2. By mobile\n");
+		printf("3. Go back\n");
+		printf("Please select a number: ");
+		scanf("%d", &select);
+		getchar();
 		if (select == 1) {
 			printf("Please enter a name: ");
 			scanf(" %s", name);
@@ -259,7 +260,7 @@ void function_list() {
 	Linklist *linklist;
 	linklist = readLinklistFromFilename(FILENAME_NOTEBOOK);
 
-	do {
+	while (1) {
 
 		printf("\t\t|###############################################|\n");
 		printf("\t\t|                                               |\n");
@@ -282,6 +283,7 @@ void function_list() {
 
 		printf("Please Input Number:");
 		scanf("%d", &i);
+		getchar();
 
 		switch (i) {
 
@@ -318,5 +320,5 @@ void function_list() {
 				printf("Number should between 1 -- 8!\n");
 		}
 
-	} while (1);
+	}
 }
