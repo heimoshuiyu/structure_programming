@@ -12,7 +12,8 @@
 #define FILENAME_FEMAIELIST "femaleList.txt"
 #define FILENAME_BYAGE "byAge.txt"
 #define FILENAME_NAMELIST "nameList.txt"
-#define TITLE_HINT "Name(str) Age(int) Gender(char) Mobile(str) Room(str) Birthday(str)"
+#define TITLE_HINT                                                             \
+	"Name(str) Age(int) Gender(char) Mobile(str) Room(str) Birthday(str)"
 #define TITLE_PERSON "-%14s %4s %6s %15s %15s %8s\n"
 #define TITLE_PERSON_WITHOUT_AGE "-%14s %6s %15s %15s %8s\n"
 #define TITLE_PERSON_NAME_GENDER_AGE "-%14s %6s %4s\n"
@@ -42,23 +43,29 @@ typedef struct Person {
 void function_list();
 void Quit() { exit(0); }
 
-FILE *ShortCutOpen(const char filename[], const char flags[]);
 Linklist *newLinklist();
 Person *newPerson();
 int updatePerson(FILE *fp, Person *person);
 Person *fscanPerson(FILE *fp);
 void addPerson(Linklist *linklist, Person *person);
 void removePerson(Linklist *linklist, Person *person);
+
 Person *findPersonDependOnUser(linklist *linklist);
 Person *findPersonByName(Linklist *linklist, const char name[]);
 Person *findPersonByMobile(Linklist *linklist, const char mobile[]);
+void sortLinklistByName(Linklist *linklist, char desc);
+
 void fprintPerson(FILE *fp, Person *person);
 void fprintPersonWithoutAge(FILE *fp, Person *person);
 void fprintPersonNameGenderAge(FILE *fp, Person *person);
-void fprintLinklist(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person));
-void fprintLinklistByGender(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person), char gender);
-void sortLinklistByName(Linklist *linklist, char desc);
+void fprintLinklist(FILE *fp, Linklist *linklist,
+		void (*callbackFPrintPerson)(FILE *fp, Person *person));
+void fprintLinklistByGender(FILE *fp, Linklist *linklist,
+		void (*callbackFPrintPerson)(FILE *fp,
+			Person *person),
+		char gender);
 Linklist *readLinklistFromFilename(const char filename[]);
+FILE *ShortCutOpen(const char filename[], const char flags[]);
 
 int main() {
 
@@ -70,7 +77,8 @@ int main() {
 FILE *ShortCutOpen(const char filename[], const char flags[]) {
 	FILE *fp = fopen(filename, flags);
 	if (!fp) {
-		fprintf(stderr, "Fatal: Can not open file %s with flags %s\n", filename, flags);
+		fprintf(stderr, "Fatal: Can not open file %s with flags %s\n", filename,
+				flags);
 		exit(2);
 	}
 	return fp;
@@ -87,14 +95,9 @@ Person *newPerson() {
 }
 
 int updatePerson(FILE *fp, Person *person) {
-	return fscanf(fp, " %s %d %c %s %s %s",
-			person->name,
-			&person->age,
-			&person->gender,
-			person->mobile,
-			person->room,
-			person->birthday
-	);
+	return fscanf(fp, " %s %d %c %s %s %s", person->name, &person->age,
+			&person->gender, person->mobile, person->room,
+			person->birthday);
 }
 
 Person *fscanPerson(FILE *fp) {
@@ -172,12 +175,11 @@ Person *findPersonDependOnUser(Linklist *linklist) {
 			continue;
 		}
 	}
-
 }
 
 Person *findPersonByName(Linklist *linklist, const char name[]) {
 	Person *person;
-	for(person = linklist->phead; person; person = person->next) {
+	for (person = linklist->phead; person; person = person->next) {
 		if (strcmp(person->name, name) == 0) {
 			return person;
 		}
@@ -187,7 +189,7 @@ Person *findPersonByName(Linklist *linklist, const char name[]) {
 
 Person *findPersonByMobile(Linklist *linklist, const char mobile[]) {
 	Person *person;
-	for(person = linklist->phead; person; person = person->next) {
+	for (person = linklist->phead; person; person = person->next) {
 		if (strcmp(person->mobile, mobile) == 0) {
 			return person;
 		}
@@ -196,49 +198,42 @@ Person *findPersonByMobile(Linklist *linklist, const char mobile[]) {
 }
 
 void fprintPerson(FILE *fp, Person *person) {
-	fprintf(fp, FORMAT_PERSON,
-			person->name,
-			person->age,
-			person->gender,
-			person->mobile,
-			person->room,
-			person->birthday
-		);
+	fprintf(fp, FORMAT_PERSON, person->name, person->age, person->gender,
+			person->mobile, person->room, person->birthday);
 }
 
 void fprintPersonWithoutAge(FILE *fp, Person *person) {
-	fprintf(fp, FORMAT_PERSON_WITHOUT_AGE,
-			person->name,
-			person->gender,
-			person->mobile,
-			person->room,
-			person->birthday
-	       );
+	fprintf(fp, FORMAT_PERSON_WITHOUT_AGE, person->name, person->gender,
+			person->mobile, person->room, person->birthday);
 }
 
 void fprintPersonNameGenderAge(FILE *fp, Person *person) {
-	fprintf(fp, FORMAT_PERSON_NAME_GENDER_AGE,
-			person->name,
-			person->gender,
-			person->age
-	       );
+	fprintf(fp, FORMAT_PERSON_NAME_GENDER_AGE, person->name, person->gender,
+			person->age);
 }
 
-void fprintLinklist(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person)) {
+void fprintLinklist(FILE *fp, Linklist *linklist,
+		void (*callbackFPrintPerson)(FILE *fp, Person *person)) {
 	fprintLinklistByGender(fp, linklist, callbackFPrintPerson, 0);
 }
 
-void fprintLinklistByGender(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person), char gender) {
+void fprintLinklistByGender(FILE *fp, Linklist *linklist,
+		void (*callbackFPrintPerson)(FILE *fp,
+			Person *person),
+		char gender) {
 	Person *person;
 	if (fp == stdout) {
 		if (callbackFPrintPerson == fprintPerson) {
-			fprintf(fp, TITLE_PERSON, "Name", "Age", "Gender", "Mobile", "Room", "Birthday");
+			fprintf(fp, TITLE_PERSON, "Name", "Age", "Gender", "Mobile", "Room",
+					"Birthday");
 		} else if (callbackFPrintPerson == fprintPersonWithoutAge) {
-			fprintf(fp, TITLE_PERSON_WITHOUT_AGE, "Name", "Gender", "Mobile", "Room", "Birthday");
+			fprintf(fp, TITLE_PERSON_WITHOUT_AGE, "Name", "Gender", "Mobile", "Room",
+					"Birthday");
 		} else if (callbackFPrintPerson == fprintPersonNameGenderAge) {
 			fprintf(fp, TITLE_PERSON_NAME_GENDER_AGE, "Name", "Gender", "Age");
 		} else {
-			fprintf(stderr, "Warrning: Unknown title of callback function %p\n", callbackFPrintPerson);
+			fprintf(stderr, "Warrning: Unknown title of callback function %p\n",
+					callbackFPrintPerson);
 		}
 	}
 	for (person = linklist->phead; person; person = person->next) {
@@ -253,11 +248,7 @@ void sortLinklistByName(Linklist *linklist, char desc) {
 	Person *person;
 	for (size_t i = linklist->len; i > 0; i--) {
 		person = linklist->phead;
-		for (
-				size_t k = 0;
-				k < i - 1;
-				k++
-		    ) {
+		for (size_t k = 0; k < i - 1; k++) {
 			if (strcmp(person->name, person->next->name) * desc > 0) {
 				c = person->next;
 				if (linklist->phead == person) {
