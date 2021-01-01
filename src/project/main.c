@@ -41,6 +41,7 @@ Person *newPerson();
 Person *fscanPerson(FILE *fp);
 void addPerson(Linklist *linklist, Person *person);
 void removePerson(Linklist *linklist, Person *person);
+Person *findPersonDependOnUser(linklist *linklist);
 Person *findPersonByName(Linklist *linklist, const char name[]);
 Person *findPersonByMobile(Linklist *linklist, const char mobile[]);
 void fprintPerson(FILE *fp, Person *person);
@@ -118,6 +119,46 @@ void removePerson(Linklist *linklist, Person *person) {
 		linklist->ptail = person;
 	}
 	free(person);
+}
+
+Person *findPersonDependOnUser(Linklist *linklist) {
+	int select;
+	char name[PERSON_NAME_LENGTH];
+	char mobile[PERSON_MOBILE_LENGTH];
+	Person *person;
+	printf("Select the way to find a person:\n");
+	printf("1. By name\n");
+	printf("2. By mobile\n");
+	printf("3. Go back\n");
+	printf("Please select a number: ");
+	scanf("%d", &select);
+	while (1) {
+		if (select == 1) {
+			printf("Please enter a name: ");
+			scanf(" %s", name);
+			person = findPersonByName(linklist, name);
+			if (!person) {
+				printf("Can't find person with name '%s'\n", name);
+				continue;
+			}
+			return person;
+		} else if (select == 2) {
+			printf("Please enter a mobile: ");
+			scanf(" %s", mobile);
+			person = findPersonByMobile(linklist, mobile);
+			if (!person) {
+				printf("Can't find person with mobile '%s'\n", mobile);
+				continue;
+			}
+			return person;
+		} else if (select == 3) {
+			return NULL;
+		} else {
+			printf("Please input a number between 1--3\n");
+			continue;
+		}
+	}
+
 }
 
 Person *findPersonByName(Linklist *linklist, const char name[]) {
@@ -214,6 +255,7 @@ Linklist *readLinklistFromFilename(const char filename[]) {
 void function_list() {
 	int i;
 
+	Person *person;
 	Linklist *linklist;
 	linklist = readLinklistFromFilename(FILENAME_NOTEBOOK);
 
@@ -247,10 +289,17 @@ void function_list() {
 				fprintLinklist(stdout, linklist, fprintPerson);
 				break;
 			case 1:
-				printf("%s\n", TITLE_HINT);
+				printf("Input a person link this:\n%s\n", TITLE_HINT);
 				addPerson(linklist, fscanPerson(stdin));
 				break;
 			case 2:
+				person = findPersonDependOnUser(linklist);
+				if (!person) {
+					printf("You didn't find a person, nothing happend\n");
+					break;
+				}
+				removePerson(linklist, person);
+				printf("Removed\n");
 				break;
 			case 3:
 				break;
