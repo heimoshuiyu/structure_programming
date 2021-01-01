@@ -8,6 +8,9 @@
 #define PERSON_BIRTHDAY_LENGTH 8
 #define PERSON_DATA_NUM 6
 #define FILENAME_NOTEBOOK "notebook.txt"
+#define FILENAME_MAIELIST "maleList.txt"
+#define FILENAME_FEMAIELIST "femaleList.txt"
+#define FILENAME_BYAGE "byAge.txt"
 #define TITLE_HINT "Name(str) Age(int) Gender(char) Mobile(str) Room(str) Birthday(str)"
 
 typedef struct Person Person;
@@ -38,6 +41,7 @@ void Quit() { exit(0); }
 void checkPtr(void *);
 Linklist *newLinklist();
 Person *newPerson();
+int updatePerson(FILE *fp, Person *person);
 Person *fscanPerson(FILE *fp);
 void addPerson(Linklist *linklist, Person *person);
 void removePerson(Linklist *linklist, Person *person);
@@ -48,6 +52,7 @@ void fprintPerson(FILE *fp, Person *person);
 void fprintPersonWithoutAge(FILE *fp, Person *person);
 void fprintPersonNameGenderAge(FILE *fp, Person *person);
 void fprintLinklist(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person));
+void fprintLinklistByGender(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person), char gender);
 void sortLinklistByName(Linklist *linklist, char desc);
 Linklist *readLinklistFromFilename(const char filename[]);
 
@@ -66,21 +71,17 @@ void checkPtr(void *ptr) {
 }
 
 Linklist *newLinklist() {
-	Linklist *linklist = calloc(1, sizeof(malloc));
+	Linklist *linklist = (Linklist *)calloc(1, sizeof(Linklist));
 	return linklist;
 }
 
 Person *newPerson() {
-	Person *person = calloc(1, sizeof(malloc));
+	Person *person = (Person *)calloc(1, sizeof(Linklist));
 	return person;
 }
 
-Person *fscanPerson(FILE *fp) {
-	int status;
-	Person *person = malloc(sizeof(Person));
-	person->next = NULL;
-	person->last = NULL;
-	status = fscanf(fp, " %s %d %c %s %s %s",
+int updatePerson(FILE *fp, Person *person) {
+	return fscanf(fp, " %s %d %c %s %s %s",
 			person->name,
 			&person->age,
 			&person->gender,
@@ -88,7 +89,13 @@ Person *fscanPerson(FILE *fp) {
 			person->room,
 			person->birthday
 	);
-	if (!(status == PERSON_DATA_NUM)) {
+}
+
+Person *fscanPerson(FILE *fp) {
+	Person *person = (Person *)malloc(sizeof(Person));
+	person->next = NULL;
+	person->last = NULL;
+	if (!(updatePerson(fp, person) == PERSON_DATA_NUM)) {
 		return NULL;
 	}
 	return person;
@@ -218,6 +225,15 @@ void fprintLinklist(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(F
 	}
 }
 
+void fprintLinklistByGender(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person), char gender) {
+	Person *person;
+	for (person = linklist->phead; person; person = person->next) {
+		if (person->gender == gender) {
+			callbackFPrintPerson(fp, person);
+		}
+	}
+}
+
 void sortLinklistByName(Linklist *linklist, char desc) {
 	Person tmp;
 	Person *person;
@@ -247,15 +263,18 @@ Linklist *readLinklistFromFilename(const char filename[]) {
 	}
 	linklist = newLinklist();
 	while (person = fscanPerson(fp), person) {
-		printf("add\n");
 		addPerson(linklist, person);
 	}
+	fclose(fp);
 	return linklist;
 }
 
 void function_list() {
 	int i;
+	char gender;
+	FILE *fp;
 
+	void (*callbackFPrintPerson)(FILE *fp, Person *person);
 	Person *person;
 	Linklist *linklist;
 	linklist = readLinklistFromFilename(FILENAME_NOTEBOOK);
@@ -304,14 +323,54 @@ void function_list() {
 				printf("Removed\n");
 				break;
 			case 3:
+				person = findPersonDependOnUser(linklist);
+				if (!person) {
+					printf("You didn't find a person, nothing happend\n");
+					break;
+				}
+				printf("Input a person link this:\n%s\n", TITLE_HINT);
+				updatePerson(stdin, person);
 				break;
 			case 4:
+				person = findPersonDependOnUser(linklist);
+				if (!person) {
+					printf("You didn't find a person, nothing happend\n");
+					break;
+				}
+				fprintPerson(stdout, person);
 				break;
 			case 5:
+				fprintLinklistByGender(stdout, linklist, fprintPersonWithoutAge, 'M');
+				fp = fopen(FILENAME_MAIELIST, "w");
+				if (!fp) {
+					printf("Fatal: Can not write to %s\n", FILENAME_MAIELIST);
+					exit(3);
+				}
+				fprintLinklistByGender(fp, linklist, fprintPerson, 'M');
+
+				fprintLinklistByGender(stdout, linklist, fprintPersonWithoutAge, 'F');
+				fp = fopen(FILENAME_FEMAIELIST, "w");
+				if (!fp) {
+					printf("Fatal: Can not write to %s\n", FILENAME_FEMAIELIST);
+					exit(3);
+				}
+				fprintLinklistByGender(fp, linklist, fprintPersonWithoutAge, 'F');
+				fclose(fp);
 				break;
 			case 6:
+				sortLinklistByName(linklist, 1);
+				fprintLinklist(stdout, linklist, fprintPersonWithoutAge);
 				break;
 			case 7:
+				fprintLinklist(stdout, linklist, fprintPersonNameGenderAge);
+
+				fp = fopen(FILENAME_BYAGE, "w");
+				if (!fp) {
+					printf("Fatal: Can not write to %s\n", FILENAME_BYAGE);
+					exit(3);
+				}
+				fprintLinklistByGender(fp, linklist, fprintPerson, 'F');
+				fclose(fp);
 				break;
 			case 8:
 				Quit();
@@ -319,6 +378,5 @@ void function_list() {
 			default:
 				printf("Number should between 1 -- 8!\n");
 		}
-
 	}
 }
