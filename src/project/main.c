@@ -6,7 +6,9 @@
 #define PERSON_MOBILE_LENGTH 15
 #define PERSON_ROOM_LENGTH 20
 #define PERSON_BIRTHDAY_LENGTH 8
+#define PERSON_DATA_NUM 6
 #define FILENAME_NOTEBOOK "notebook.txt"
+#define TITLE_HINT "Name(str) Age(int) Gender(char) Mobile(str) Room(str) Birthday(str)"
 
 typedef struct Person Person;
 typedef struct Linklist linklist;
@@ -19,7 +21,7 @@ typedef struct Linklist {
 
 typedef struct Person {
 	char name[PERSON_NAME_LENGTH];
-	char age;
+	int age;
 	char gender;
 	char mobile[PERSON_MOBILE_LENGTH];
 	char room[PERSON_ROOM_LENGTH];
@@ -46,6 +48,7 @@ void fprintPersonWithoutAge(FILE *fp, Person *person);
 void fprintPersonNameGenderAge(FILE *fp, Person *person);
 void fprintLinklist(FILE *fp, Linklist *linklist, void (*callbackFPrintPerson)(FILE *fp, Person *person));
 void sortLinklistByName(Linklist *linklist, char desc);
+Linklist *readLinklistFromFilename(const char filename[]);
 
 int main() {
 
@@ -72,13 +75,11 @@ Person *newPerson() {
 }
 
 Person *fscanPerson(FILE *fp) {
-	if (!feof(fp)) {
-		return NULL;
-	}
+	int status;
 	Person *person = malloc(sizeof(Person));
 	person->next = NULL;
 	person->last = NULL;
-	fscanf(fp, " %s\t%c\t%c\t%s\t%s\t%s\n",
+	status = fscanf(fp, " %s %d %c %s %s %s",
 			person->name,
 			&person->age,
 			&person->gender,
@@ -86,6 +87,9 @@ Person *fscanPerson(FILE *fp) {
 			person->room,
 			person->birthday
 	);
+	if (!(status == PERSON_DATA_NUM)) {
+		return NULL;
+	}
 	return person;
 }
 
@@ -190,8 +194,28 @@ void sortLinklistByName(Linklist *linklist, char desc) {
 	}
 }
 
+Linklist *readLinklistFromFilename(const char filename[]) {
+	FILE *fp;
+	Linklist *linklist;
+	Person *person;
+	fp = fopen(filename, "r");
+	if (!fp) {
+		fprintf(stderr, "Fatal: Open %s error\n", filename);
+		exit(2);
+	}
+	linklist = newLinklist();
+	while (person = fscanPerson(fp), person) {
+		printf("add\n");
+		addPerson(linklist, person);
+	}
+	return linklist;
+}
+
 void function_list() {
 	int i;
+
+	Linklist *linklist;
+	linklist = readLinklistFromFilename(FILENAME_NOTEBOOK);
 
 	do {
 
@@ -219,7 +243,12 @@ void function_list() {
 
 		switch (i) {
 
+			case 39:
+				fprintLinklist(stdout, linklist, fprintPerson);
+				break;
 			case 1:
+				printf("%s\n", TITLE_HINT);
+				addPerson(linklist, fscanPerson(stdin));
 				break;
 			case 2:
 				break;
