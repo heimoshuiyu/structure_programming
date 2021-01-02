@@ -329,6 +329,7 @@ void function_list() {
 			case 1:
 				printf("Input a person link this:\n%s\n", TITLE_HINT);
 				addPerson(linklist, fscanPerson(stdin));
+				printf("Added\n");
 				break;
 			case 2:
 				person = findPersonDependOnUser(linklist);
