@@ -13,7 +13,7 @@
 #define FILENAME_BYAGE "byAge.txt"
 #define FILENAME_NAMELIST "nameList.txt"
 #define TITLE_HINT                                                             \
-	"Name(str) Age(int) Gender(char) Mobile(str) Room(str) Birthday(str)"
+	"Name(Miku) Age(16) Gender(F/M) Mobile(1234567890) Room(T8-307-R10) Birthday(20070831)"
 #define TITLE_PERSON "-%14s %4s %6s %15s %15s %8s\n"
 #define TITLE_PERSON_WITHOUT_AGE "-%14s %6s %15s %15s %8s\n"
 #define TITLE_PERSON_NAME_GENDER_AGE "-%14s %6s %4s\n"
