@@ -1,3 +1,19 @@
+/*
+ * Structure Programming (1001) Group Project
+ * Group: 7
+ * Member List:
+ * Walter 1930006025
+ * CK 1830024282
+ * Spencer 1930001122
+ *
+ * Introduction:
+ * We first jointly design the program structure and all the required functions.
+ * Then we assign the function as our task. Finally, we help each other, debug
+ * together, and improve code quality. Since functions call each other, it is
+ * difficult to know who contributed what menu. The specific contribution
+ * information is in the function declaration.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,16 +43,22 @@
 /* define the hint when ask user to input a person's information */
 #define TITLE_HINT                                                             \
 	"Name(Miku) Age(16) Gender(F/M) Mobile(1234567890) Room(T8-307-R10) "        \
-	"Birthday(20070831)"
+	"Birthday(20070831)\n"
 
 /* define the title format */
+/* Name Age Gender Mobile Room Birthday */
 #define TITLE_PERSON "-%14s %4s %6s %15s %15s %8s\n"
+/* Name Gender Mobile Room Birthday */
 #define TITLE_PERSON_WITHOUT_AGE "-%14s %6s %15s %15s %8s\n"
+/* Name Gender Age */
 #define TITLE_PERSON_NAME_GENDER_AGE "-%14s %6s %4s\n"
 
 /* define the information output format */
+/* Name Age Gender Mobile Room Birthday */
 #define FORMAT_PERSON "%15s %4d %6c %15s %15s %8s\n"
+/* Name Gender Mobile Room Birthday */
 #define FORMAT_PERSON_WITHOUT_AGE "%15s %6c %15s %15s %8s\n"
+/* Name Gender Age */
 #define FORMAT_PERSON_NAME_GENDER_AGE "%15s %6c %4d\n"
 
 typedef struct Person Person;
@@ -65,6 +87,10 @@ typedef struct Person {
 void function_list();
 void Quit() { exit(0); }
 
+/* ########## Below functions Mainly Contributed by Spencer ##########
+ * Spencer is mainly responsible for linklist method
+ * including new, add, remove, and update method */
+
 /* method to create an empty linklist */
 Linklist *newLinklist();
 
@@ -83,6 +109,9 @@ void addPerson(Linklist *linklist, Person *person);
 /* remove a person from reversed linklist */
 void removePerson(Linklist *linklist, Person *person);
 
+/* ########## Below functions Mainly Contributed by CK ##########
+ * CK is mainly responsible for find and sort method */
+
 /* find person in the linklist, ask user to select by name or by mobile, return
  * NULL if no person found */
 Person *findPersonDependOnUser(linklist *linklist);
@@ -96,6 +125,10 @@ Person *findPersonByMobile(Linklist *linklist, const char mobile[]);
 /* sort person in the linklist by name, desc=1 means ascending order, desc=-1
  * means descending order */
 void sortLinklistByName(Linklist *linklist, char desc);
+
+/* ########## Below functions Mainly Contributed by Walter ##########
+ * Walter is mainly responsible for I/O control,
+ * including read and write to standard output and file. */
 
 /* print person information to stream */
 void fprintPerson(FILE *fp, Person *person);
@@ -524,7 +557,7 @@ void function_list() {
 					break;
 				}
 				/* ask user to input a person */
-				printf("Input a person link this:\n%s\n", TITLE_HINT);
+				printf("Input a person link this:\n%s", TITLE_HINT);
 				/* scan and from standard input and update to person */
 				updatePerson(stdin, person);
 				break;
