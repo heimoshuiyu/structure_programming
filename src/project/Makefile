@@ -1,5 +1,5 @@
 file:main.c
-	gcc main.c -o file
+	gcc main.c -o file -g
 
 .PHONY:delete
 delete:

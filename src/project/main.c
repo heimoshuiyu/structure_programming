@@ -251,6 +251,7 @@ void sortLinklistByName(Linklist *linklist, char desc) {
 	for (size_t i = linklist->len; i > 0; i--) {
 		person = linklist->phead;
 		for (size_t k = 0; k < i - 1; k++) {
+			printf("cmp %s and %s\n", person->name, person->next->name);
 			if (strcmp(person->name, person->next->name) * desc > 0) {
 				c = person->next;
 				if (linklist->phead == person) {
