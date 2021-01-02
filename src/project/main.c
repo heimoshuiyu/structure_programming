@@ -128,11 +128,13 @@ void removePerson(Linklist *linklist, Person *person) {
 		person->last->next = person->next;
 	} else {
 		linklist->phead = person->next;
+		person->next->last = NULL;
 	}
 	if (person->next) {
 		person->next->last = person->last;
 	} else {
-		linklist->ptail = person;
+		linklist->ptail = person->last;
+		person->last->next = NULL;
 	}
 	free(person);
 }
@@ -329,7 +331,6 @@ void function_list() {
 			case 1:
 				printf("Input a person link this:\n%s\n", TITLE_HINT);
 				addPerson(linklist, fscanPerson(stdin));
-				printf("Added\n");
 				break;
 			case 2:
 				person = findPersonDependOnUser(linklist);
@@ -338,7 +339,6 @@ void function_list() {
 					break;
 				}
 				removePerson(linklist, person);
-				printf("Removed\n");
 				break;
 			case 3:
 				person = findPersonDependOnUser(linklist);
