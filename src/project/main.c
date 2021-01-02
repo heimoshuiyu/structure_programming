@@ -337,7 +337,7 @@ void function_list() {
 		printf("\t\t|   $$ 8 -Quit -                                |\n");
 		printf("\t\t|                                               |\n");
 		printf("\t\t|###############################################|\n");
-		printf("Please Input Number:");
+		printf("Please Input Number: ");
 		scanf("%d", &i);
 		getchar();
 
