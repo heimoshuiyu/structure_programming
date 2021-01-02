@@ -400,7 +400,7 @@ void function_list() {
 				fprintLinklist(stdout, linklist, fprintPersonNameGenderAge);
 
 				fp = ShortCutOpen(FILENAME_BYAGE, "w");
-				fprintLinklistByGender(fp, linklist, fprintPerson, 'F');
+				fprintLinklist(fp, linklist, fprintPerson);
 				fclose(fp);
 				break;
 			case 8:
