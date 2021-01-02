@@ -124,6 +124,12 @@ void addPerson(Linklist *linklist, Person *person) {
 }
 
 void removePerson(Linklist *linklist, Person *person) {
+	if (linklist->len == 1) {
+		linklist->phead = NULL;
+		linklist->ptail = NULL;
+		linklist->len = 0;
+		return;
+	}
 	if (person->last) {
 		person->last->next = person->next;
 	} else {
@@ -136,6 +142,7 @@ void removePerson(Linklist *linklist, Person *person) {
 		linklist->ptail = person->last;
 		person->last->next = NULL;
 	}
+	linklist->len--;
 	free(person);
 }
 
@@ -251,7 +258,6 @@ void sortLinklistByName(Linklist *linklist, char desc) {
 	for (size_t i = linklist->len; i > 0; i--) {
 		person = linklist->phead;
 		for (size_t k = 0; k < i - 1; k++) {
-			printf("cmp %s and %s\n", person->name, person->next->name);
 			if (strcmp(person->name, person->next->name) * desc > 0) {
 				c = person->next;
 				if (linklist->phead == person) {
@@ -292,6 +298,17 @@ Linklist *readLinklistFromFilename(const char filename[]) {
 	return linklist;
 }
 
+void debug(Linklist *linklist) {
+	printf("from head to tail\n");
+	Person *person;
+	printf("phead at %p\n", linklist->phead);
+	for (person = linklist->phead; person; person = person->next) {
+		printf("person at %p, name %s, last %p, next %p\n",
+				person, person->name, person->last, person->next);
+	}
+	printf("ptail at %p\n", linklist->ptail);
+}
+
 void function_list() {
 	int i;
 	int desc;
@@ -327,7 +344,7 @@ void function_list() {
 		switch (i) {
 
 			case 39:
-				fprintLinklist(stdout, linklist, fprintPerson);
+				debug(linklist);
 				break;
 			case 1:
 				printf("Input a person link this:\n%s\n", TITLE_HINT);
