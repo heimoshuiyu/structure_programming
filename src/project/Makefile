@@ -7,7 +7,10 @@ file.exe:main.c
 file_cpp.exe:main.c
 	x86_64-w64-mingw32-g++ main.c -o file_cpp.exe -g -Wall
 
-.PHONY: win
+.PHONY:linux
+linux: file file_cpp
+
+.PHONY:win
 win: file.exe file_cpp.exe
 
 .PHONY:all
